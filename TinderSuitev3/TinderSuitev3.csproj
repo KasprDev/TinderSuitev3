@@ -7,10 +7,16 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="C:\Users\kaspr\.nuget\packages\lottiesharp\2.2.0\contentFiles\any\net6.0-windows7.0\lottie_sharp.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Fonts\fa-solid-900.ttf" />
     <None Remove="Resources\login.json" />
     <None Remove="Resources\pulse.json" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Betalgo.OpenAI" Version="7.1.5" />
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.51" />
     <PackageReference Include="LottieSharp" Version="2.2.0" />
     <PackageReference Include="Microsoft.ML" Version="3.0.0-preview.23266.6" />
     <PackageReference Include="Microsoft.ML.Vision" Version="3.0.0-preview.23266.6" />
@@ -18,6 +24,7 @@
     <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.3.1" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Fonts\fa-solid-900.ttf" />
     <Resource Include="Resources\login.json" />
     <Resource Include="Resources\pulse.json" />
   </ItemGroup>

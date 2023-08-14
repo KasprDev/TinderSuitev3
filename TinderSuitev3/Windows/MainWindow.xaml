@@ -1,0 +1,41 @@
+﻿<Window x:Class="TinderSuitev3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TinderSuitev3" xmlns:local1="clr-namespace:TinderSuitev3"
+        xmlns:helpers="clr-namespace:TinderSuitev3.Helpers"
+        mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
+        Title="TinderSuite" Height="697" Width="1003" MinHeight="697" MinWidth="1003" Loaded="Window_Loaded">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <helpers:BooleanToOppositeVisibilityConverter x:Key="BooleanToOppositeVisibilityConverter" />
+    </Window.Resources>
+    <Grid>
+        <Menu VerticalAlignment="Top">
+            <MenuItem Header="Accounts">
+                <MenuItem Name="AddAccount" Header="Add Account" InputGestureText="CTRL + O" Click="AddAccount_OnClick" />
+                <MenuItem Name="ManageAccounts" Header="Manage Accounts" Click="ManageAccounts_OnClick"/>
+                <Separator/>
+                <MenuItem Name="HiddenDetails" Header="View Hidden Account Details" Click="HiddenDetails_OnClick"/>
+            </MenuItem>
+            <MenuItem Header="Messaging" IsEnabled="{Binding ShowDashboard}" Click="MenuItem_OnClick" />
+            <MenuItem Header="Settings">
+                <MenuItem Name="Settings" Header="Manage Settings" Click="Settings_OnClick" />
+            </MenuItem>
+        </Menu>
+
+        <Frame Padding="0, 15, 0, 0" Source="NoAccount.xaml">
+            <Frame.Visibility>
+                <Binding Path="ShowDashboard" Converter="{StaticResource BooleanToOppositeVisibilityConverter}" />
+            </Frame.Visibility>
+        </Frame>
+
+        <Frame Padding="0, 15, 0, 0" Source="Matcher.xaml">
+            <Frame.Visibility>
+                <Binding Path="ShowDashboard" Converter="{StaticResource BooleanToVisibilityConverter}" />
+            </Frame.Visibility>
+        </Frame>
+    </Grid>
+</Window>

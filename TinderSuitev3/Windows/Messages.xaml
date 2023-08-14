@@ -1,0 +1,32 @@
+﻿<Window x:Class="TinderSuitev3.Messages"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Style="{StaticResource CustomWindowStyle}"
+        xmlns:local="clr-namespace:TinderSuitev3"
+        mc:Ignorable="d"
+        Title="Messages" Height="450" Width="388">
+    <Grid Loaded="Grid_Loaded">
+        <ListBox x:Name="MessageListBox" ItemsSource="{Binding Inbox}" PreviewMouseLeftButtonDown="MessageListBox_OnPreviewMouseLeftButtonDown" MouseDoubleClick="MessageListBox_MouseDoubleClick">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" >
+                        <Image Width="60" Height="60" Stretch="UniformToFill" Margin="6">
+                            <Image.Clip>
+                                <EllipseGeometry RadiusX="25" RadiusY="25" Center="30,30"/>
+                            </Image.Clip>
+                            <Image.Source>
+                                <BitmapImage UriSource="{Binding Path=Person.Photos[0].Url}" />
+                            </Image.Source>
+                        </Image>
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding Path=Person.Name}" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Path=Messages[0].Text}" FontSize="13" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</Window>

@@ -8,6 +8,29 @@ namespace TinderSuitev3.Helpers
 {
     public static class Lists
     {
+        public static Dictionary<string, int> WeightedWords = new Dictionary<string, int>()
+        {
+            { "snapchat", 2 },
+            { "snap", 8 },
+            { "insta", 6 },
+            { "ig:", 6 },
+            { " ig ", 6 },
+            { "snvpchvt", 100 },
+            { "snap chat", 5 },
+            { "snap-", 15 },
+            { "snap:", 15 },
+            { "snvp-", 100 },
+            { "sпap", 100 },
+            { "sпapchat", 100 },
+            { "make content", 20 },
+            { "some content", 20 },
+            { "a good time", 20 },
+            { "😘", 5 },
+            { "💞", 5 },
+
+
+        };
+
         public static string[] Races = new string[]
         {
             "Caucasian",

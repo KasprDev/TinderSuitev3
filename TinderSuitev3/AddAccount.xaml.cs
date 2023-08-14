@@ -17,6 +17,7 @@ using Newtonsoft.Json;
 using TinderSuitev3;
 using TinderSuitev3.Helpers;
 using TinderSuitev3.Objects;
+using TinderSuitev3.TinderEngine;
 
 namespace DotNetServerManager
 {

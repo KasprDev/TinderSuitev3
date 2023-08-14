@@ -1,0 +1,31 @@
+﻿<Window x:Class="TinderSuitev3.Windows.HiddenProfileDetails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Style="{StaticResource CustomWindowStyle}"
+        xmlns:local="clr-namespace:TinderSuitev3.Windows"
+        xmlns:userControls="clr-namespace:TinderSuitev3.UserControls"
+        mc:Ignorable="d"
+        Title="Hidden Profile Details" Height="378" Width="254">
+    <Grid>
+        <StackPanel Margin="10, 5, 10, 10">
+            <userControls:HiddenProfileField Key="Geolocation" Value="Location" />
+            <Separator/>
+            <userControls:HiddenProfileField Key="Register Date" Value="01/25/1999" />
+            <Separator/>
+            <userControls:HiddenProfileField Key="Sync Swipe" Value="Enabled" />
+            <Separator/>
+            <userControls:HiddenProfileField Key="Photo Optimizer" Value="Enabled" />
+            <Separator/>
+            <userControls:HiddenProfileField Key="Photo Tagging" Value="Enabled" />
+            <Separator/>
+            <userControls:HiddenProfileField Key="CRM Id" Value="{Binding Details.Data.User.CrmId}"/>
+            <Separator/>
+            <userControls:HiddenProfileField Key="Noonlight Protection" Value="Enabled" />
+            <Separator/>
+            <userControls:HiddenProfileField Key="Has Photos Processing" Value="Yes" />
+            <Separator/>
+        </StackPanel>
+    </Grid>
+</Window>
