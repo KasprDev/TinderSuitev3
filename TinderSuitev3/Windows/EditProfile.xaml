@@ -1,0 +1,25 @@
+﻿<Window x:Class="TinderSuitev3.TinderEngine.EditProfile"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TinderSuitev3.TinderEngine"
+        mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
+        Title="Edit Profile" Height="450" Width="340">
+    <Grid>
+        <StackPanel Margin="10">
+            <TextBlock Text="Bio" FontWeight="SemiBold" Margin="0, 0, 0, 4"></TextBlock>
+
+            <TextBox
+                Name="BioText"
+                Height="60"
+                TextWrapping="Wrap"
+                AcceptsReturn="True"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"/>
+
+            <Button Content="Generate" Name="GenerateBio" Click="GenerateBio_OnClick" Width="100" Padding="2" Margin="0, 5, 0, 0" HorizontalAlignment="Right"></Button>
+        </StackPanel>
+    </Grid>
+</Window>

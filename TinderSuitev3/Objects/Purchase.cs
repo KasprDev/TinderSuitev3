@@ -2,7 +2,7 @@
 
 namespace TinderSuitev3.Objects
 {
-    public class Purchase
+    public partial class Purchase
     {
         [JsonProperty("product_type")] public string ProductType { get; set; }
 

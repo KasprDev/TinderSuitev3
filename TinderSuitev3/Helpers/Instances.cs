@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using DotNetServerManager;
+using TinderSuitev3.Windows;
 
 namespace TinderSuitev3.Helpers
 {

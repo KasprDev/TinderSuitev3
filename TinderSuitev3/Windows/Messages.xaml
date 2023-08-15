@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Style="{StaticResource CustomWindowStyle}"
         xmlns:local="clr-namespace:TinderSuitev3"
+        xmlns:objects="clr-namespace:TinderSuitev3.Objects"
+        xmlns:helpers="clr-namespace:TinderSuitev3.Helpers"
         mc:Ignorable="d"
         Title="Messages" Height="450" Width="388">
+    <Window.Resources>
+        <Style x:Key="FontAwesome">
+            <Setter Property="TextElement.FontFamily" Value="/Fonts/fa-solid-900.ttf#Font Awesome 6 Pro Solid" />
+        </Style>
+        <helpers:EqualityToVisibilityConverter x:Key="EqualityToVisibilityConverter" />
+    </Window.Resources>
     <Grid Loaded="Grid_Loaded">
         <ListBox x:Name="MessageListBox" ItemsSource="{Binding Inbox}" PreviewMouseLeftButtonDown="MessageListBox_OnPreviewMouseLeftButtonDown" MouseDoubleClick="MessageListBox_MouseDoubleClick">
             <ListBox.ItemTemplate>

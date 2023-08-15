@@ -19,6 +19,7 @@ namespace TinderSuitev3.Helpers
             { "snap chat", 5 },
             { "snap-", 15 },
             { "snap:", 15 },
+            { "kindly", 20 },
             { "snvp-", 100 },
             { "sпap", 100 },
             { "sпapchat", 100 },
@@ -27,8 +28,16 @@ namespace TinderSuitev3.Helpers
             { "a good time", 20 },
             { "😘", 5 },
             { "💞", 5 },
+        };
 
-
+        public static string[] IntentList = new string[]
+        {
+            "Long-term partner",
+            "Long-term, open to short",
+            "Short-term, open to long",
+            "Short-term fun",
+            "New friends",
+            "Still figuring it out"
         };
 
         public static string[] Races = new string[]

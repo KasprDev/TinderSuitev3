@@ -47,9 +47,9 @@ namespace TinderSuitev3.TinderEngine
 
             // Dock points for having no bio.
             if (string.IsNullOrWhiteSpace(user.Bio))
-                score -= 15;
+                score -= 16;
             else if (user.Bio.Length < 20)
-                score -= 20;
+                score -= 22;
             else if (user.Bio.Length > 90)
                 score += 8;
 
@@ -57,7 +57,7 @@ namespace TinderSuitev3.TinderEngine
                 score -= 25;
 
             if (user.Photos.Count == 1)
-                score -= 12;
+                score -= 15;
 
             // Go through each weighted word.
             foreach (var item in Lists.WeightedWords)
@@ -72,14 +72,14 @@ namespace TinderSuitev3.TinderEngine
 
             // If the name isn't capitalized, dock a few points off for that.
             if (!char.IsUpper(user.Name.First()))
-                score -= 35;
+                score -= 33;
 
             if (user.Jobs != null)
             {
                 if (user.Jobs.Where(x => x.Title != null).Any(x => x.Title!.Name.Contains("OF")) ||
                     user.Jobs.Where(x => x.Title != null).Any(x => x.Title!.Name.Contains("model")))
                 {
-                    score -= 25;
+                    score -= 30;
                 }
                 else
                 {

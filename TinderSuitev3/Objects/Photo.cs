@@ -2,7 +2,7 @@
 
 namespace TinderSuitev3.Objects
 {
-    public class Photo
+    public partial class Photo
     {
         [JsonProperty("id")] public string Id { get; set; }
 

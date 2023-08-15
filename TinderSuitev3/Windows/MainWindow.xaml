@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TinderSuitev3" xmlns:local1="clr-namespace:TinderSuitev3"
         xmlns:helpers="clr-namespace:TinderSuitev3.Helpers"
         mc:Ignorable="d"
         Style="{StaticResource CustomWindowStyle}"
@@ -14,10 +13,11 @@
     </Window.Resources>
     <Grid>
         <Menu VerticalAlignment="Top">
-            <MenuItem Header="Accounts">
+            <MenuItem Header="Account">
                 <MenuItem Name="AddAccount" Header="Add Account" InputGestureText="CTRL + O" Click="AddAccount_OnClick" />
                 <MenuItem Name="ManageAccounts" Header="Manage Accounts" Click="ManageAccounts_OnClick"/>
                 <Separator/>
+                <MenuItem Name="EditProfile" Header="Edit Profile" Click="EditProfile_OnClick"/>
                 <MenuItem Name="HiddenDetails" Header="View Hidden Account Details" Click="HiddenDetails_OnClick"/>
             </MenuItem>
             <MenuItem Header="Messaging" IsEnabled="{Binding ShowDashboard}" Click="MenuItem_OnClick" />

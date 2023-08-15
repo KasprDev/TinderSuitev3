@@ -6,25 +6,36 @@
         Style="{StaticResource CustomWindowStyle}"
         xmlns:local="clr-namespace:TinderSuitev3.Windows"
         xmlns:userControls="clr-namespace:TinderSuitev3.UserControls"
+        xmlns:helpers="clr-namespace:TinderSuitev3.Helpers"
         mc:Ignorable="d"
         Title="Hidden Profile Details" Height="378" Width="254">
+    <Window.Resources>
+        <helpers:LocationConverter x:Key="LocationConverter" />
+    </Window.Resources>
     <Grid>
         <StackPanel Margin="10, 5, 10, 10">
-            <userControls:HiddenProfileField Key="Geolocation" Value="Location" />
+            <userControls:HiddenProfileField Key="Geolocation">
+                <userControls:HiddenProfileField.Value>
+                    <MultiBinding Converter="{StaticResource LocationConverter}">
+                        <Binding Path="Details.Data.User.Pos.Lat" />
+                        <Binding Path="Details.Data.User.Pos.Lon" />
+                    </MultiBinding>
+                </userControls:HiddenProfileField.Value>
+            </userControls:HiddenProfileField>
             <Separator/>
-            <userControls:HiddenProfileField Key="Register Date" Value="01/25/1999" />
+            <userControls:HiddenProfileField Key="Register Date" Value="{Binding Details.Data.User.CreateDate, StringFormat='dd/MM/yyyy'}" />
             <Separator/>
-            <userControls:HiddenProfileField Key="Sync Swipe" Value="Enabled" />
+            <userControls:HiddenProfileField Key="Sync Swipe" Value="{Binding Details.Data.User.SyncSwipeEnabled}" />
             <Separator/>
-            <userControls:HiddenProfileField Key="Photo Optimizer" Value="Enabled" />
+            <userControls:HiddenProfileField Key="Photo Optimizer" Value="{Binding Details.Data.User.PhotoOptimizerEnabled}" />
             <Separator/>
-            <userControls:HiddenProfileField Key="Photo Tagging" Value="Enabled" />
+            <userControls:HiddenProfileField Key="Photo Tagging" Value="{Binding Details.Data.User.PhotoTaggingEnabled}" />
             <Separator/>
             <userControls:HiddenProfileField Key="CRM Id" Value="{Binding Details.Data.User.CrmId}"/>
             <Separator/>
-            <userControls:HiddenProfileField Key="Noonlight Protection" Value="Enabled" />
+            <userControls:HiddenProfileField Key="Noonlight Protection" Value="{Binding Details.Data.User.NoonlightProtected}" />
             <Separator/>
-            <userControls:HiddenProfileField Key="Has Photos Processing" Value="Yes" />
+            <userControls:HiddenProfileField Key="Has Photos Processing" Value="{Binding Details.Data.User.PhotosProcessing}" />
             <Separator/>
         </StackPanel>
     </Grid>

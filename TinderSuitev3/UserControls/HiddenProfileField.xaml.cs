@@ -25,7 +25,7 @@ namespace TinderSuitev3.UserControls
             nameof(Key), typeof(string), typeof(HiddenProfileField), new PropertyMetadata("Default Text"));
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register(
-            nameof(Value), typeof(string), typeof(HiddenProfileField), new PropertyMetadata("Default Text"));
+            nameof(Value), typeof(string), typeof(HiddenProfileField), new PropertyMetadata("N/A"));
 
         public string Key
         {

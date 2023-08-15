@@ -1,16 +1,11 @@
-﻿namespace QuickType
+﻿using Newtonsoft.Json;
+
+namespace TinderSuitev3.Objects
 {
-    using System;
-    using System.Collections.Generic;
-
-    using System.Globalization;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Converters;
-
     public partial class TinderUserDetails
     {
         [JsonProperty("meta")]
-        public Meta Meta { get; set; }
+        public TinderSuitev3.Objects.Meta Meta { get; set; }
 
         [JsonProperty("data")]
         public TinderUserDetailsData Data { get; set; }
@@ -721,6 +716,8 @@
 
     public partial class Title
     {
+        [JsonProperty("name")]
+        public string Name { get; set; }
         [JsonProperty("text")]
         public Text Text { get; set; }
 
@@ -944,40 +941,16 @@
         public string[] SupportedPaymentMethods { get; set; }
     }
 
-    public partial class Job
-    {
-        [JsonProperty("company")]
-        public School Company { get; set; }
-
-        [JsonProperty("title")]
-        public School Title { get; set; }
-    }
-
     public partial class School
     {
         [JsonProperty("displayed")]
         public bool Displayed { get; set; }
-
-        [JsonProperty("name")]
-        public string Name { get; set; }
     }
 
     public partial class Photo
     {
-        [JsonProperty("id")]
-        public string Id { get; set; }
-
         [JsonProperty("crop_info")]
         public CropInfo CropInfo { get; set; }
-
-        [JsonProperty("url")]
-        public Uri Url { get; set; }
-
-        [JsonProperty("fbId")]
-        public string FbId { get; set; }
-
-        [JsonProperty("processedFiles")]
-        public ProcessedFile[] ProcessedFiles { get; set; }
 
         [JsonProperty("assets")]
         public object[] Assets { get; set; }
@@ -1035,18 +1008,6 @@
 
         [JsonProperty("y_offset_pct")]
         public long YOffsetPct { get; set; }
-    }
-
-    public partial class ProcessedFile
-    {
-        [JsonProperty("url")]
-        public Uri Url { get; set; }
-
-        [JsonProperty("height")]
-        public long Height { get; set; }
-
-        [JsonProperty("width")]
-        public long Width { get; set; }
     }
 
     public partial class ProcessedVideo
@@ -1134,24 +1095,6 @@
 
         [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
-    }
-
-    public partial class ChoiceSelection
-    {
-        [JsonProperty("id")]
-        public string Id { get; set; }
-
-        [JsonProperty("name")]
-        public string Name { get; set; }
-
-        [JsonProperty("style", NullValueHandling = NullValueHandling.Ignore)]
-        public string Style { get; set; }
-
-        [JsonProperty("emoji", NullValueHandling = NullValueHandling.Ignore)]
-        public string Emoji { get; set; }
-
-        [JsonProperty("icon_urls", NullValueHandling = NullValueHandling.Ignore)]
-        public IconUrlElement[] IconUrls { get; set; }
     }
 
     public partial class IconUrlElement
@@ -1257,11 +1200,5 @@
 
         [JsonProperty("image_url")]
         public Uri ImageUrl { get; set; }
-    }
-
-    public partial class Meta
-    {
-        [JsonProperty("status")]
-        public long Status { get; set; }
     }
 }

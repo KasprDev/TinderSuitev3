@@ -24,6 +24,7 @@ namespace TinderSuitev3
     /// </summary>
     public partial class Messages : Window, INotifyPropertyChanged
     {
+        public static TinderUser? User { get; set; }
         public Match[]? Inbox { get; set; }
         public Messages()
         {
@@ -40,6 +41,7 @@ namespace TinderSuitev3
 
         private async void Grid_Loaded(object sender, RoutedEventArgs e)
         {
+            User = await Tinder.Instances.First().GetUser();
             var resp = await Tinder.Instances.First().GetMatches(true);
 
             Inbox = resp?.Data.Matches?.ToArray();

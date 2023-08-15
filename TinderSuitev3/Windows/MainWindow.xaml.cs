@@ -106,5 +106,10 @@ namespace TinderSuitev3
             var data = await Tinder.Instances.First().GetUserHiddenDetails();
             new HiddenProfileDetails(data).Show();
         }
+
+        private void EditProfile_OnClick(object sender, RoutedEventArgs e)
+        {
+            new EditProfile().Show();
+        }
     }
 }

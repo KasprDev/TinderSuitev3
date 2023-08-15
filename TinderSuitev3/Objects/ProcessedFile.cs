@@ -2,7 +2,7 @@
 
 namespace TinderSuitev3.Objects
 {
-    public class ProcessedFile
+    public partial class ProcessedFile
     {
         [JsonProperty("width")] public int Width { get; set; }
 

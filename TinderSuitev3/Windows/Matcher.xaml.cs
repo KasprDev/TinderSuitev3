@@ -1,54 +1,67 @@
-﻿using System.IO;
+﻿using System.Globalization;
 using System.Media;
-using System.Net;
-using System.Net.Http;
-using System.Net.WebSockets;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using OpenAI;
-using OpenAI.Managers;
-using OpenAI.ObjectModels;
-using OpenAI.ObjectModels.RequestModels;
 using TinderSuitev3.Helpers;
 using TinderSuitev3.Objects;
 using TinderSuitev3.TinderEngine;
 
-namespace TinderSuitev3
+namespace TinderSuitev3.Windows
 {
-    /// <summary>
-    /// Interaction logic for Matcher.xaml
-    /// </summary>
-    public partial class Matcher : Page
+    public partial class Matcher
     {
-        public static string[] Races => Lists.Races;
-        public static string[] ZodiacSigns => Lists.StarSigns;
-        public static string[] Hobbies => Lists.Hobbies;
-        public bool Running { get; set; }
-
         private CancellationTokenSource? _cancelTokenSource;
+        private readonly BrushConverter _bc;
 
         public TinderRecommendedUser[]? MatchCards { get; set; }
 
-        private static BrushConverter _bc;
+        public bool Running { get; set; }
 
         public Matcher()
         {
             InitializeComponent();
             DataContext = this;
             Instances.Matcher = this;
-            
+
             _bc = new BrushConverter();
-            
         }
 
+        /// <summary>
+        /// Text box that only allows number inputs.
+        /// </summary>
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+");
+            Regex regex = new Regex("[^0-9.]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        /// <summary>
+        /// Display various account information on a loop.
+        /// </summary>
+        private async void UpdateAccountInfo()
+        {
+            while (true)
+            {
+                var account = Tinder.Instances.FirstOrDefault();
+
+                if (account != null)
+                {
+                    var data = await Tinder.Instances.First().GetTeasers();
+                    var profile = await Tinder.Instances.First().GetUserHiddenDetails();
+
+                    LocationLon.Text = profile?.Data.User.Pos.Lon.ToString(CultureInfo.InvariantCulture);
+                    LocationLat.Text = profile?.Data.User.Pos.Lat.ToString(CultureInfo.InvariantCulture);
+
+                    LikesYou.Text = data.Data.Count.ToString();
+                    await Task.Delay(TimeSpan.FromMinutes(2));
+                }
+                else
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(3));
+                }
+            }
         }
 
         private async void Page_Loaded(object sender, System.Windows.RoutedEventArgs e)
@@ -72,53 +85,77 @@ namespace TinderSuitev3
 
             MinimumIncome.Text = prefs.MinimumIncome.ToString();
             RequireMinIncome.IsChecked = prefs.EnableIncomeCheck;
+            
+            UpdateAccountInfo();
         }
 
-        public async Task DisplayCard(TinderRecommendedUser card)
+        /// <summary>
+        ///     Process the user's zodiac sign.
+        /// </summary>
+        /// <param name="card"></param>
+        /// <returns>True or false on if the user should not be liked.</returns>
+        private bool ProcessZodiac(TinderRecommendedUser card)
         {
-            var like = true;
-
-            using var http = new HttpClient();
-            var imageBytes = await http.GetByteArrayAsync(card.User.Photos.First().Url);
-
-            var bitmap = new BitmapImage { CacheOption = BitmapCacheOption.OnLoad };
-            bitmap.BeginInit();
-            bitmap.StreamSource = new MemoryStream(imageBytes);
-            bitmap.EndInit();
-
-            UserPhoto.Source = bitmap;
-            UserName.Text = card.User.Name + $" ({CalculateAge(card.User.BirthDate)})";
-
-            var preferredZodiacs = ZodiacList.SelectedItems.Cast<string>().ToList();
             ZodiacCard.Text = card.User.Descriptors?.FirstOrDefault(x => x.Name == "Zodiac")?.Selections.First().Name;
 
-            IntentCard.Text = card.User.RelationshipIntent?.BodyText;
+            if (!string.IsNullOrWhiteSpace(ZodiacCard.Text) && !ZodiacList.SelectedItems.Contains(ZodiacCard.Text))
+            {
+                ZodiacCardBack.Background = (Brush)_bc.ConvertFrom("#370f0f")!;
+                return false;
+            }
 
-            if (_cancelTokenSource!.IsCancellationRequested)
-                return;
+            ZodiacCardBack.Background = (Brush)_bc.ConvertFrom("#222")!;
+            return true;
+        }
 
-            RaceCard.Text = "Processing..";
+        /// <summary>
+        ///     Process the user's ethnicity.
+        /// </summary>
+        /// <param name="imageBytes"></param>
+        /// <returns>True or false on if the user should not be liked.</returns>
+        private bool ProcessRace(byte[] imageBytes)
+        {
+            RaceCard.Text = Engine.ProcessEthnicity(imageBytes);
 
-            var ethnicity = Engine.ProcessEthnicity(imageBytes);
-            RaceCard.Text = ethnicity;
-
-            if (PreferredEthnicities.SelectedItems.Contains(ethnicity))
+            if (PreferredEthnicities.SelectedItems.Contains(RaceCard.Text))
             {
                 RaceCardBack.Background = (Brush)_bc.ConvertFrom("#222")!;
-            }
-            else
-            {
-                RaceCardBack.Background = (Brush)_bc.ConvertFrom("#370f0f")!;
-                like = false;
+                return true;
             }
 
+            RaceCardBack.Background = (Brush)_bc.ConvertFrom("#370f0f")!;
+            return false;
+        }
+
+        /// <summary>
+        ///     Process whether or not the user is a bot.
+        /// </summary>
+        /// <param name="card"></param>
+        /// <returns>True or false on if the user should not be liked.</returns>
+        private async Task<bool> ProcessIfUserIsReal(TinderRecommendedUser card)
+        {
             RealPersonMeter.Value = Engine.ScoreUser(card.User);
 
             var settings = await Settings.GetSettings();
 
             if (RealPersonMeter.Value < settings?.WeightThreshold)
-                like = false;
+            {
+                if (ReportBots.IsChecked!.Value)
+                    await Tinder.Instances.First().ReportUser(card.User.Id);
 
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Process the user's income (if provided)
+        /// </summary>
+        /// <param name="card"></param>
+        /// <returns>True or false on if the user should not be liked.</returns>
+        private async Task<bool> ProcessIncome(TinderRecommendedUser card)
+        {
             var income = await Engine.GetIncome(card.User);
             IncomeCard.Text = income;
 
@@ -129,26 +166,60 @@ namespace TinderSuitev3
                 if (RequireMinIncome.IsChecked!.Value && Convert.ToDecimal(MinimumIncome.Text) > Convert.ToDecimal(incomeNum))
                 {
                     IncomeCardBack.Background = (Brush)_bc.ConvertFrom("#370f0f")!;
-                    
-                    like = false;
-                }
-                else
-                {
-                    IncomeCardBack.Background = (Brush)_bc.ConvertFrom("#222")!;
+                    return false;
                 }
             }
-            else
-            {
-                IncomeCardBack.Background = (Brush)_bc.ConvertFrom("#222")!;
-            }
+
+            IncomeCardBack.Background = (Brush)_bc.ConvertFrom("#222")!;
+            return true;
         }
 
+        public async Task DisplayCard(TinderRecommendedUser card)
+        {
+            var like = true;
+            var image = await ImageHelper.DownloadImage(card.User.Photos.First().Url, false);
+
+            UserPhoto.Source = ImageHelper.BytesToBitmap(image);
+            UserName.Text = card.User.Name + $" ({CalculateAge(card.User.BirthDate)})";
+
+            // If an disliked zodiac sign is selected, skip the user.
+            if (!ProcessZodiac(card))
+                like = false;
+
+            IntentCard.Text = card.User.RelationshipIntent?.BodyText;
+
+            // If an unpreferred race is selected, skip the user.
+            if (!ProcessRace(image))
+                like = false;
+
+            // Check if the user is real, if not; skip them.
+            if (!await ProcessIfUserIsReal(card))
+                like = false;
+
+            // Process the user's yearly income and skip if required.
+            if (!await ProcessIncome(card))
+                like = false;
+
+            LikedStatus.Text = like ? "Yes" : "No";
+            LikedStatus.Foreground = like ? (Brush)_bc.ConvertFrom("#099132")! : (Brush)_bc.ConvertFrom("#ab0733")!;
+
+            await Tinder.Instances.First().PassUser(card.User.Id, card.User.SNumber);
+        }
+
+        /// <summary>
+        /// Load a list of "Match Cards" (eg: A list of users to swipe through).
+        /// </summary>
         public async Task LoadMatchCards()
         {
             var res = await Tinder.Instances.First().GetMatchCards();
             MatchCards = res?.Data.Results?.ToArray();
         }
 
+        /// <summary>
+        /// Calculate the user's age based on their birthday.
+        /// </summary>
+        /// <param name="birthDate">The user's birthday.</param>
+        /// <returns>The user's age in years.</returns>
         public static int CalculateAge(DateTime birthDate)
         {
             var currentDate = DateTime.Today;
@@ -162,6 +233,9 @@ namespace TinderSuitev3
             return age; 
         }
 
+        /// <summary>
+        /// The main "Start / Stop" functionality for the automation.
+        /// </summary>
         private async void StartAutomationButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (!Running)
@@ -197,6 +271,9 @@ namespace TinderSuitev3
             }
         }
 
+        /// <summary>
+        /// Save the user's match preferences.
+        /// </summary>
         private async void SavePreferences_OnClick(object sender, RoutedEventArgs e)
         {
             var prefs = new SavedMatchPreference()
@@ -216,13 +293,36 @@ namespace TinderSuitev3
             };
 
             await Settings.UpdateMatchPreferences(prefs);
-
             new DarkMessageBox("Your match preferences have been saved!").ShowDialog();
         }
 
+        /// <summary>
+        /// Change if the minimum income input box is enabled.
+        /// </summary>
         private void RequireMinIncome_OnClick(object sender, RoutedEventArgs e)
         {
             MinimumIncome!.IsEnabled = (bool)RequireMinIncome.IsChecked!;
+        }
+
+        private async void UpdateLocation_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!LocationHelper.IsValidLatitude(Convert.ToDouble(LocationLat.Text)))
+            {
+                new DarkMessageBox("Please enter a valid latitude.").ShowDialog();
+                return;
+            }
+
+            if (!LocationHelper.IsValidLongitude(Convert.ToDouble(LocationLon.Text)))
+            {
+                new DarkMessageBox("Please enter a valid longitude.").ShowDialog();
+                return;
+            }
+
+
+            await Tinder.Instances.First()
+                .ChangeLocation(Convert.ToDecimal(LocationLat.Text), Convert.ToDecimal(LocationLon.Text));
+
+            new DarkMessageBox("Your location has been updated!").ShowDialog();
         }
     }
 }

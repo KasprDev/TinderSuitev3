@@ -54,8 +54,6 @@ namespace TinderSuitev3.Objects
 
         [JsonProperty("schools")] public IList<School> Schools { get; set; }
 
-        [JsonProperty("teaser")] public Teaser Teaser { get; set; }
-
         [JsonProperty("birth_date_info")] public string BirthDateInfo { get; set; }
 
         [JsonProperty("is_traveling")] public bool? IsTraveling { get; set; }

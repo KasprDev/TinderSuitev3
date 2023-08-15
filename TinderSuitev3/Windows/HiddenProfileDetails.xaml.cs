@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.VisualBasic;
-using QuickType;
+using TinderSuitev3.Objects;
 
 namespace TinderSuitev3.Windows
 {

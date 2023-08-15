@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Text;
 using System.Windows;
 using Newtonsoft.Json;
-using QuickType;
 using TinderSuitev3.Objects;
 
 namespace TinderSuitev3.TinderEngine
@@ -51,6 +50,12 @@ namespace TinderSuitev3.TinderEngine
             _client = new HttpClient(handler: httpClientHandler, disposeHandler: true);
         }
 
+        public async Task<Teaser> GetTeasers()
+        {
+            var data = await SendGet("v2/fast-match/teaser?locale=en");
+            return JsonConvert.DeserializeObject<Teaser>(data)!;
+        }
+
         public async Task<bool> IsValidToken()
         {
             var data = await SendGet("v2/recs/core?locale=en");
@@ -70,8 +75,6 @@ namespace TinderSuitev3.TinderEngine
                 TertiaryCode = 99,
                 Source = "profile",
             });
-
-            MessageBox.Show(resp);
         }
 
         public async Task<ChatThreadResponse?> GetChatThread(string matchId)
@@ -101,6 +104,17 @@ namespace TinderSuitev3.TinderEngine
             var data = await SendGet($"like/{userId}?locale=en");
             return JsonConvert.DeserializeObject<LikedUser>(data);
         }
+
+        public async Task ChangeLocation(decimal lat, decimal lon)
+        {
+            await SendPost($"v2/meta?locale=en", new
+            {
+                force_fetch_resources = true,
+                lat = lat,
+                lon = lon
+            });
+        }
+
 
         public async Task SendMessage(string userId, string message)
         {

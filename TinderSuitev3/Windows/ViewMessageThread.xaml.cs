@@ -61,6 +61,10 @@ namespace TinderSuitev3.Windows
             if (messages.Length == 0)
                 return null;
 
+            var m = messages.ToList();
+            m = m.Where(x => x.From != UserId).ToList();
+            Messages = m.ToArray();
+
             var ai = new OpenAIService(new OpenAiOptions()
             {
                 ApiKey = settings!.OpenAiKey!
@@ -69,7 +73,7 @@ namespace TinderSuitev3.Windows
             var aiMessages = new List<ChatMessage>() 
                 { ChatMessage.FromUser($"I'm going to give you the transcript of a few messages from a dating app between me and another user. Reply to me as if you are replying directly to them. " +
                                        $"Don't pay attention to anything that I said in the below chat logs, just pay attention to their last response; using the rest of the messages as context. Try to make 2 sentences or less. If you're asked a question, " +
-                                       $"make something up that's believable and generic. Also, 50% of the time, can you throw in a question to ask them? Ask something completely casual that you'd hear in a normal conversation.") };
+                                       $"make something up that's believable and generic. Also, 50% of the time, can you throw in a question to ask them? Ask something casual and don't be super formal with your message.") };
 
             var msg = "";
 
@@ -84,7 +88,7 @@ namespace TinderSuitev3.Windows
             var res = await ai.ChatCompletion.CreateCompletion(new ChatCompletionCreateRequest
             {
                 Messages = aiMessages,
-                Model = Models.ChatGpt3_5Turbo,
+                Model = Models.Gpt_3_5_Turbo,
                 MaxTokens = 50
             });
 
@@ -109,8 +113,10 @@ namespace TinderSuitev3.Windows
                 From = UserId!
             });
 
-            Messages = messages.ToArray();
+            // await Tinder.Instances.First().SendMessage(Match.MatchId, NewMessage.Text);
+
             NewMessage.Text = "";
+            Messages = messages.ToArray();
             OnPropertyChanged("Messages");
         }
 
