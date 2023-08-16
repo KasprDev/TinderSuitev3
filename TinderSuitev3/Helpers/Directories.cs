@@ -11,5 +11,6 @@ namespace TinderSuitev3.Helpers
     {
         public static string BaseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TinderSuite");
         public static string AccountsDir = Path.Combine(BaseDir, "Accounts");
+        public static string LogDir = Path.Combine(BaseDir, "Logs");
     }
 }

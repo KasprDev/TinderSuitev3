@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Data;
-using System.Windows.Markup;
 using DotNetServerManager;
 using Newtonsoft.Json;
+using Serilog;
 using TinderSuitev3.Helpers;
 using TinderSuitev3.Objects;
 using TinderSuitev3.TinderEngine;
@@ -20,7 +18,7 @@ namespace TinderSuitev3
     // INotifyPropertyChanged was needed to make the dashboard update in real-time.
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private bool _showDashboard = false;
+        private bool _showDashboard;
         public bool ShowDashboard
         {
             get => _showDashboard;
@@ -44,11 +42,6 @@ namespace TinderSuitev3
             InitializeComponent();
             DataContext = this;
             Instances.MainWindow = this;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            new AddAccount().Show();
         }
 
         private void AddAccount_OnClick(object sender, RoutedEventArgs e)
@@ -110,6 +103,11 @@ namespace TinderSuitev3
         private void EditProfile_OnClick(object sender, RoutedEventArgs e)
         {
             new EditProfile().Show();
+        }
+
+        private async void Window_Closing(object sender, CancelEventArgs e)
+        {
+            await Log.CloseAndFlushAsync();
         }
     }
 }

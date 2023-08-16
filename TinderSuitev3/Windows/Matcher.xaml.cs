@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using Serilog;
 using TinderSuitev3.Helpers;
 using TinderSuitev3.Objects;
 using TinderSuitev3.TinderEngine;
@@ -14,6 +15,7 @@ namespace TinderSuitev3.Windows
     {
         private CancellationTokenSource? _cancelTokenSource;
         private readonly BrushConverter _bc;
+        public static int AmountLiked;
 
         public TinderRecommendedUser[]? MatchCards { get; set; }
 
@@ -85,7 +87,8 @@ namespace TinderSuitev3.Windows
 
             MinimumIncome.Text = prefs.MinimumIncome.ToString();
             RequireMinIncome.IsChecked = prefs.EnableIncomeCheck;
-            
+            MinimumIncome.IsEnabled = prefs.EnableIncomeCheck;
+
             UpdateAccountInfo();
         }
 
@@ -98,7 +101,7 @@ namespace TinderSuitev3.Windows
         {
             ZodiacCard.Text = card.User.Descriptors?.FirstOrDefault(x => x.Name == "Zodiac")?.Selections.First().Name;
 
-            if (!string.IsNullOrWhiteSpace(ZodiacCard.Text) && !ZodiacList.SelectedItems.Contains(ZodiacCard.Text))
+            if (!string.IsNullOrWhiteSpace(ZodiacCard.Text) && ZodiacList.SelectedItems.Contains(ZodiacCard.Text))
             {
                 ZodiacCardBack.Background = (Brush)_bc.ConvertFrom("#370f0f")!;
                 return false;
@@ -176,6 +179,8 @@ namespace TinderSuitev3.Windows
 
         public async Task DisplayCard(TinderRecommendedUser card)
         {
+            Log.Debug($"Card for {card.User.Name} has been loaded.");
+
             var like = true;
             var image = await ImageHelper.DownloadImage(card.User.Photos.First().Url, false);
 
@@ -203,7 +208,16 @@ namespace TinderSuitev3.Windows
             LikedStatus.Text = like ? "Yes" : "No";
             LikedStatus.Foreground = like ? (Brush)_bc.ConvertFrom("#099132")! : (Brush)_bc.ConvertFrom("#ab0733")!;
 
-            await Tinder.Instances.First().PassUser(card.User.Id, card.User.SNumber);
+            if (like)
+            {
+                await Tinder.Instances.First().LikeUser(card.User.Id);
+                AmountLiked++;
+                LikesThisSession.Text = AmountLiked.ToString();
+            }
+            else
+            {
+                await Tinder.Instances.First().PassUser(card.User.Id, card.User.SNumber);
+            }
         }
 
         /// <summary>
@@ -213,6 +227,7 @@ namespace TinderSuitev3.Windows
         {
             var res = await Tinder.Instances.First().GetMatchCards();
             MatchCards = res?.Data.Results?.ToArray();
+            Log.Debug($"{MatchCards?.Length} match cards have been loaded.");
         }
 
         /// <summary>
@@ -266,6 +281,7 @@ namespace TinderSuitev3.Windows
             {
                 SystemSounds.Beep.Play();
                 await _cancelTokenSource!.CancelAsync();
+                Log.Information($"Match automation has been cancelled by the user.");
                 StartAutomationButton.Content = "Start Automation";
                 Running = false;
             }

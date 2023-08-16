@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Windows;
+using Serilog;
 using TinderSuitev3.Helpers;
 
 namespace TinderSuitev3
@@ -13,11 +14,26 @@ namespace TinderSuitev3
         {
             base.OnStartup(e);
 
+            if (Directory.Exists(Directories.LogDir))
+                Directory.CreateDirectory(Directories.LogDir);
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .Enrich.FromLogContext()
+                .WriteTo.File(Path.Combine(Directories.LogDir, "logs.txt"), retainedFileCountLimit: 20, retainedFileTimeLimit: TimeSpan.FromDays(7))
+                .CreateLogger();
+
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+
             if (!Directory.Exists(Directories.BaseDir))
             {
                 Directory.CreateDirectory(Directories.BaseDir);
                 Directory.CreateDirectory(Directories.AccountsDir);
             }
+        }
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Log.Fatal(e.ExceptionObject as Exception, "Unhandled Exception");
         }
     }
 }

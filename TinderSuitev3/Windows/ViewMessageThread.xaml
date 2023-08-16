@@ -13,6 +13,17 @@
         <Style x:Key="FontAwesome">
             <Setter Property="TextElement.FontFamily" Value="/Fonts/fa-solid-900.ttf#Font Awesome 6 Pro Solid" />
         </Style>
+        <Style x:Key="NoHoverButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="Transparent">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -22,19 +33,21 @@
         </Grid.RowDefinitions>
 
         <Grid>
-            <StackPanel Orientation="Horizontal">
-                <Grid Width="60" Height="60" Margin="15, 0, 15, 0">
-                    <Image Width="60" Height="60" Stretch="UniformToFill">
-                        <Image.Source>
-                            <BitmapImage UriSource="{Binding Path=Match.Person.Photos[0].Url}" />
-                        </Image.Source>
-                        <Image.Clip>
-                            <EllipseGeometry RadiusX="30" RadiusY="30" Center="30,30"/>
-                        </Image.Clip>
-                    </Image>
-                </Grid>
-                <TextBlock Text="{Binding Match.Person.Name}" FontSize="18" VerticalAlignment="Center"></TextBlock>
-            </StackPanel>
+            <Button Name="ViewProfile" Click="ViewProfile_OnClick" Cursor="Hand"  Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Left" Padding="0, 0, 20, 0" Style="{StaticResource NoHoverButtonStyle}">
+                <StackPanel Orientation="Horizontal">
+                    <Grid Width="60" Height="60" Margin="15, 0, 15, 0">
+                        <Image Width="60" Height="60" Stretch="UniformToFill">
+                            <Image.Source>
+                                <BitmapImage UriSource="{Binding Path=Match.Person.Photos[0].Url}" />
+                            </Image.Source>
+                            <Image.Clip>
+                                <EllipseGeometry RadiusX="30" RadiusY="30" Center="30,30"/>
+                            </Image.Clip>
+                        </Image>
+                    </Grid>
+                    <TextBlock Text="{Binding Match.Person.Name}" FontSize="18" VerticalAlignment="Center"></TextBlock>
+                </StackPanel>
+            </Button>
         </Grid>
 
         <ListBox x:Name="MessageListBox" Grid.Row="1" ItemsSource="{Binding Messages}" Padding="10">
@@ -120,3 +133,4 @@
         </Grid>
     </Grid>
 </Window>
+ 

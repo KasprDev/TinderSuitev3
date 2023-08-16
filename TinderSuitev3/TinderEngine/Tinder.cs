@@ -4,7 +4,9 @@ using System.Net.Http;
 using System.Text;
 using System.Windows;
 using Newtonsoft.Json;
+using QuickType;
 using TinderSuitev3.Objects;
+using Teaser = TinderSuitev3.Objects.Teaser;
 
 namespace TinderSuitev3.TinderEngine
 {
@@ -16,7 +18,7 @@ namespace TinderSuitev3.TinderEngine
         private const string _tinderVersion = "4.30.1";
 
         private const string _userAgent =
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36 Edg/108.0.1462.76";
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203";
 
         private ProxyType? _proxy { get; set; }
         public string _authToken { get; set; }
@@ -64,7 +66,7 @@ namespace TinderSuitev3.TinderEngine
 
         public async Task ReportUser(string userId)
         {
-            var resp = await SendPost($"v4/report/new?locale=en", new ReportUser()
+            await SendPost($"v4/report/new?locale=en", new ReportUser()
             {
                 CountryCode = "USA",
                 OffenderId = userId,
@@ -89,6 +91,15 @@ namespace TinderSuitev3.TinderEngine
             var data = await SendGet(
                 $"v2/matches?locale=en&count=60&message={(hasSentMessage ? 1 : 0)}&is_tinder_u=false");
             return string.IsNullOrEmpty(data) ? new MatchData() : JsonConvert.DeserializeObject<MatchData>(data);
+        }
+
+        public async Task<ViewProfileDto?> GetMatchProfile(string userId)
+        {
+            var data = await SendGet($"user/{userId}?locale=en");
+
+            return string.IsNullOrEmpty(data)
+                ? new ViewProfileDto()
+                : JsonConvert.DeserializeObject<ViewProfileDto>(data);
         }
 
         public async Task<TinderRecommendation?> GetMatchCards()

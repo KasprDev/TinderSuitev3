@@ -137,5 +137,10 @@ namespace TinderSuitev3.Windows
             var s = await GenerateAIReply(Messages);
             NewMessage.Text = s;
         }
+
+        private void ViewProfile_OnClick(object sender, RoutedEventArgs e)
+        {
+            new ViewProfile(Match.Person.Id).Show();
+        }
     }
 }

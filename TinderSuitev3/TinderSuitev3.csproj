@@ -22,6 +22,8 @@
     <PackageReference Include="Microsoft.ML.Vision" Version="3.0.0-preview.23266.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.3.1" />
+    <PackageReference Include="Serilog" Version="3.0.1" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Fonts\fa-solid-900.ttf" />

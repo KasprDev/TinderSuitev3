@@ -49,9 +49,14 @@ namespace TinderSuitev3.TinderEngine
             if (string.IsNullOrWhiteSpace(user.Bio))
                 score -= 16;
             else if (user.Bio.Length < 20)
-                score -= 22;
+                score -= 25;
+            else if (user.Bio.Length < 40)
+                score -= 15;
             else if (user.Bio.Length > 90)
                 score += 8;
+
+            if (user.DistanceMi > 80)
+                score -= 18;
 
             if (user.RelationshipIntent?.BodyText == "Short-term fun")
                 score -= 25;

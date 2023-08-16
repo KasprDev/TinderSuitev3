@@ -6,7 +6,7 @@
         xmlns:helpers="clr-namespace:TinderSuitev3.Helpers"
         mc:Ignorable="d"
         Style="{StaticResource CustomWindowStyle}"
-        Title="TinderSuite" Height="697" Width="1003" MinHeight="697" MinWidth="1003" Loaded="Window_Loaded">
+        Title="TinderSuite" Height="697" Width="1003" MinHeight="697" MinWidth="1003" Loaded="Window_Loaded" Closing="Window_Closing">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <helpers:BooleanToOppositeVisibilityConverter x:Key="BooleanToOppositeVisibilityConverter" />
