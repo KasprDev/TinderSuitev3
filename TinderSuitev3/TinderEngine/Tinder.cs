@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Windows;
 using Newtonsoft.Json;
-using QuickType;
+using Serilog;
 using TinderSuitev3.Objects;
 using Teaser = TinderSuitev3.Objects.Teaser;
 
@@ -14,34 +14,34 @@ namespace TinderSuitev3.TinderEngine
     {
         public static List<Tinder> Instances = new();
 
-        private const string _appVersion = "1043001";
-        private const string _tinderVersion = "4.30.1";
+        private const string AppVersion = "1043001";
+        private const string TinderVersion = "4.30.1";
 
-        private const string _userAgent =
+        private const string UserAgent =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203";
 
-        private ProxyType? _proxy { get; set; }
-        public string _authToken { get; set; }
-        private HttpClient _client { get; set; }
-        private readonly string _apiUrl = "https://api.gotinder.com/";
+        private ProxyType? Proxy { get; }
+        public string AuthToken { get; set; }
+        private HttpClient Client { get; }
+        public readonly string ApiUrl = "https://api.gotinder.com/";
 
         public Tinder(string authToken, ProxyType? proxy)
         {
-            _authToken = authToken;
-            _client = new HttpClient();
-            _proxy = proxy;
+            AuthToken = authToken;
+            Client = new HttpClient();
+            Proxy = proxy;
 
-            if (_proxy == null) return;
+            if (Proxy == null) return;
 
             var p = new WebProxy
             {
-                Address = new Uri($"http://{_proxy.Ip}:{_proxy.Port}"),
+                Address = new Uri($"http://{Proxy.Ip}:{Proxy.Port}"),
                 BypassProxyOnLocal = false,
                 UseDefaultCredentials = false,
 
                 Credentials = new NetworkCredential(
-                    userName: _proxy.Username,
-                    password: _proxy.Password)
+                    userName: Proxy.Username,
+                    password: Proxy.Password)
             };
 
             var httpClientHandler = new HttpClientHandler();
@@ -49,7 +49,18 @@ namespace TinderSuitev3.TinderEngine
 
             httpClientHandler.ServerCertificateCustomValidationCallback =
                 HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            _client = new HttpClient(handler: httpClientHandler, disposeHandler: true);
+            Client = new HttpClient(handler: httpClientHandler, disposeHandler: true);
+        }
+
+        public async Task UpdateBio(string bio)
+        {
+            await SendPost($"v2/profile?locale=en", new
+            {
+                user = new
+                {
+                    bio = bio
+                }
+            });
         }
 
         public async Task<Teaser> GetTeasers()
@@ -61,6 +72,10 @@ namespace TinderSuitev3.TinderEngine
         public async Task<bool> IsValidToken()
         {
             var data = await SendGet("v2/recs/core?locale=en");
+
+            if (string.IsNullOrEmpty(data))
+                Log.Debug("X-Auth-Token appears to be invalid.");
+
             return !string.IsNullOrEmpty(data);
         }
 
@@ -161,16 +176,16 @@ namespace TinderSuitev3.TinderEngine
 
         public async Task<string> SendPost(string path, object data, bool gZip = false)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{_apiUrl}{path}")
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{ApiUrl}{path}")
             {
                 Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
             };
 
-            request.Headers.Add("app_version", _appVersion);
-            request.Headers.Add("tinder-version", _tinderVersion);
-            request.Headers.Add("User-agent", _userAgent);
+            request.Headers.Add("app_version", AppVersion);
+            request.Headers.Add("tinder-version", TinderVersion);
+            request.Headers.Add("User-agent", UserAgent);
             request.Headers.Add("vary", "Accept-Encoding");
-            request.Headers.Add("X-Auth-Token", _authToken);
+            request.Headers.Add("X-Auth-Token", AuthToken);
 
             if (!gZip)
             {
@@ -179,7 +194,7 @@ namespace TinderSuitev3.TinderEngine
                 request.Headers.Add("accept-language", "en-US,en;q=0.9,la;q=0.8");
             }
 
-            var resp = await _client.SendAsync(request);
+            var resp = await Client.SendAsync(request);
 
             var reader = new StreamReader(await resp.Content.ReadAsStreamAsync());
 
@@ -188,15 +203,15 @@ namespace TinderSuitev3.TinderEngine
 
         public async Task<string> SendGet(string path)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{_apiUrl}{path}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{ApiUrl}{path}");
 
-            request.Headers.Add("app_version", _appVersion);
-            request.Headers.Add("tinder-version", _tinderVersion);
-            request.Headers.Add("User-agent", _userAgent);
+            request.Headers.Add("app_version", AppVersion);
+            request.Headers.Add("tinder-version", TinderVersion);
+            request.Headers.Add("User-agent", UserAgent);
             request.Headers.Add("vary", "Accept-Encoding");
-            request.Headers.Add("X-Auth-Token", _authToken);
+            request.Headers.Add("X-Auth-Token", AuthToken);
 
-            var resp = await _client.SendAsync(request);
+            var resp = await Client.SendAsync(request);
 
             var reader = new StreamReader(await resp.Content.ReadAsStreamAsync());
 

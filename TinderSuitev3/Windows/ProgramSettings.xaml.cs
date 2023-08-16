@@ -7,9 +7,6 @@ using Path = System.IO.Path;
 
 namespace TinderSuitev3.Windows
 {
-    /// <summary>
-    /// Interaction logic for Settings.xaml
-    /// </summary>
     public partial class ProgramSettings : Window
     {
         public static ProgramSettingsDto? Settings { get; set; }
@@ -22,12 +19,11 @@ namespace TinderSuitev3.Windows
         {
             var settings = Path.Combine(Directories.BaseDir, "Settings.json");
 
-            if (File.Exists(settings))
-            {
-                Settings = JsonConvert.DeserializeObject<ProgramSettingsDto>(await File.ReadAllTextAsync(settings));
-                OpenAiKey.Text = Settings?.OpenAiKey;
-                WeightThreshold.Value = Convert.ToDouble(Settings?.WeightThreshold);
-            }
+            if (!File.Exists(settings)) return;
+
+            Settings = JsonConvert.DeserializeObject<ProgramSettingsDto>(await File.ReadAllTextAsync(settings));
+            OpenAiKey.Text = Settings?.OpenAiKey;
+            WeightThreshold.Value = Convert.ToDouble(Settings?.WeightThreshold);
         }
 
         private async void SaveChanges_OnClick(object sender, RoutedEventArgs e)
@@ -43,7 +39,7 @@ namespace TinderSuitev3.Windows
             await File.WriteAllTextAsync(settings, JsonConvert.SerializeObject(s));
 
             await Helpers.Settings.Refresh();
-            this.Close();
+            Close();
         }
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)

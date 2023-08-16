@@ -1,27 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using OpenAI;
 using OpenAI.Managers;
 using OpenAI.ObjectModels;
 using OpenAI.ObjectModels.RequestModels;
 using TinderSuitev3.Helpers;
+using TinderSuitev3.TinderEngine;
 
-namespace TinderSuitev3.TinderEngine
+namespace TinderSuitev3.Windows
 {
-    /// <summary>
-    /// Interaction logic for EditProfile.xaml
-    /// </summary>
     public partial class EditProfile : Window
     {
         public EditProfile()
@@ -57,6 +43,20 @@ namespace TinderSuitev3.TinderEngine
             {
                 BioText.Text = res.Choices.First().Message.Content;
             }
+        }
+
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            await Tinder.Instances.First().UpdateBio(BioText.Text);
+
+            new DarkMessageBox("Your bio has been updated!").ShowDialog();
+            this.Close();
+        }
+
+        private async void StackPanel_Loaded(object sender, RoutedEventArgs e)
+        {
+            var p = await Tinder.Instances.First().GetUser();
+            BioText.Text = p.Bio;
         }
     }
 }

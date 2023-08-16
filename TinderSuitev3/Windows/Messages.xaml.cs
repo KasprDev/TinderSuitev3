@@ -1,27 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using TinderSuitev3.Objects;
 using TinderSuitev3.TinderEngine;
-using TinderSuitev3.Windows;
 
-namespace TinderSuitev3
+namespace TinderSuitev3.Windows
 {
-    /// <summary>
-    /// Interaction logic for Messages.xaml
-    /// </summary>
     public partial class Messages : Window, INotifyPropertyChanged
     {
         public static TinderUser? User { get; set; }
@@ -46,11 +31,6 @@ namespace TinderSuitev3
 
             Inbox = resp?.Data.Matches?.ToArray();
             OnPropertyChanged("Inbox");
-        }
-
-        private void MessageListBox_OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            
         }
 
         private void MessageListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)

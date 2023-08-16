@@ -1,38 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Newtonsoft.Json;
 using TinderSuitev3.Helpers;
 using TinderSuitev3.Objects;
 using TinderSuitev3.TinderEngine;
 
 namespace TinderSuitev3.Windows
 {
-    /// <summary>
-    /// Interaction logic for ViewProfile.xaml
-    /// </summary>
-    public partial class ViewProfile : Window, INotifyPropertyChanged
+    public partial class ViewProfile : Window
     {
         private static string? UserId { get; set; }
         public static TinderUser? Profile;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public ViewProfile(string? userId)
         {
@@ -52,7 +30,6 @@ namespace TinderSuitev3.Windows
             Distance.Text = Profile.DistanceMi.ToString() + " miles away";
             UserPhoto.Source =
                 ImageHelper.BytesToBitmap(await ImageHelper.DownloadImage(Profile.Photos.First().Url, false));
-            OnPropertyChanged("Profile");
         }
 
         /// <summary>

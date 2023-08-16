@@ -31,12 +31,53 @@ namespace TinderSuitev3.Windows
         }
 
         /// <summary>
-        /// Text box that only allows number inputs.
+        /// Display the user that's currently being processed and also do the processing.
         /// </summary>
-        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        /// <param name="card"></param>
+        /// <returns></returns>
+        public async Task DisplayCard(TinderRecommendedUser card)
         {
-            Regex regex = new Regex("[^0-9.]+");
-            e.Handled = regex.IsMatch(e.Text);
+            Log.Debug($"Card for {card.User.Name} has been loaded.");
+
+            var like = true;
+            var image = await ImageHelper.DownloadImage(card.User.Photos.First().Url, false);
+
+            UserPhoto.Source = ImageHelper.BytesToBitmap(image);
+            UserName.Text = card.User.Name + $" ({CalculateAge(card.User.BirthDate)})";
+
+            // If an disliked zodiac sign is selected, skip the user.
+            if (!ProcessZodiac(card))
+                like = false;
+
+            IntentCard.Text = card.User.RelationshipIntent?.BodyText;
+
+            // If an unpreferred race is selected, skip the user.
+            if (!ProcessRace(image))
+                like = false;
+
+            // Check if the user is real, if not; skip them.
+            if (!await ProcessIfUserIsReal(card))
+                like = false;
+
+            // Process the user's yearly income and skip if required.
+            if (!await ProcessIncome(card))
+                like = false;
+
+            LikedStatus.Text = like ? "Yes" : "No";
+            LikedStatus.Foreground = like ? (Brush)_bc.ConvertFrom("#099132")! : (Brush)_bc.ConvertFrom("#ab0733")!;
+
+            if (like)
+            {
+                await Tinder.Instances.First().LikeUser(card.User.Id);
+                AmountLiked++;
+                LikesThisSession.Text = AmountLiked.ToString();
+            }
+            else
+            {
+                await Tinder.Instances.First().PassUser(card.User.Id, card.User.SNumber);
+            }
+
+            await Task.Delay(new Random().Next(1000, 8000));
         }
 
         /// <summary>
@@ -56,7 +97,8 @@ namespace TinderSuitev3.Windows
                     LocationLon.Text = profile?.Data.User.Pos.Lon.ToString(CultureInfo.InvariantCulture);
                     LocationLat.Text = profile?.Data.User.Pos.Lat.ToString(CultureInfo.InvariantCulture);
 
-                    LikesYou.Text = data.Data.Count.ToString();
+                    //LikesYou.Text = data.Data.Count.ToString();
+                    LikesYou.Text = "57";
                     await Task.Delay(TimeSpan.FromMinutes(2));
                 }
                 else
@@ -177,49 +219,6 @@ namespace TinderSuitev3.Windows
             return true;
         }
 
-        public async Task DisplayCard(TinderRecommendedUser card)
-        {
-            Log.Debug($"Card for {card.User.Name} has been loaded.");
-
-            var like = true;
-            var image = await ImageHelper.DownloadImage(card.User.Photos.First().Url, false);
-
-            UserPhoto.Source = ImageHelper.BytesToBitmap(image);
-            UserName.Text = card.User.Name + $" ({CalculateAge(card.User.BirthDate)})";
-
-            // If an disliked zodiac sign is selected, skip the user.
-            if (!ProcessZodiac(card))
-                like = false;
-
-            IntentCard.Text = card.User.RelationshipIntent?.BodyText;
-
-            // If an unpreferred race is selected, skip the user.
-            if (!ProcessRace(image))
-                like = false;
-
-            // Check if the user is real, if not; skip them.
-            if (!await ProcessIfUserIsReal(card))
-                like = false;
-
-            // Process the user's yearly income and skip if required.
-            if (!await ProcessIncome(card))
-                like = false;
-
-            LikedStatus.Text = like ? "Yes" : "No";
-            LikedStatus.Foreground = like ? (Brush)_bc.ConvertFrom("#099132")! : (Brush)_bc.ConvertFrom("#ab0733")!;
-
-            if (like)
-            {
-                await Tinder.Instances.First().LikeUser(card.User.Id);
-                AmountLiked++;
-                LikesThisSession.Text = AmountLiked.ToString();
-            }
-            else
-            {
-                await Tinder.Instances.First().PassUser(card.User.Id, card.User.SNumber);
-            }
-        }
-
         /// <summary>
         /// Load a list of "Match Cards" (eg: A list of users to swipe through).
         /// </summary>
@@ -270,7 +269,6 @@ namespace TinderSuitev3.Windows
                             break;
 
                         await DisplayCard(user);
-                        await Task.Delay(5000);
                     }
 
                     if (_cancelTokenSource!.IsCancellationRequested)
@@ -339,6 +337,15 @@ namespace TinderSuitev3.Windows
                 .ChangeLocation(Convert.ToDecimal(LocationLat.Text), Convert.ToDecimal(LocationLon.Text));
 
             new DarkMessageBox("Your location has been updated!").ShowDialog();
+        }
+
+        /// <summary>
+        /// Text box that only allows number inputs.
+        /// </summary>
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9.]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

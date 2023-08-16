@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TinderSuitev3.Helpers
+﻿namespace TinderSuitev3.Helpers
 {
     public static class Lists
     {

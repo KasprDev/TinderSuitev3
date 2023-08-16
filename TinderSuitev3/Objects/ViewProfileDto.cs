@@ -1,6 +1,4 @@
-﻿using TinderSuitev3.Objects;
-
-namespace QuickType
+﻿namespace TinderSuitev3.Objects
 {
     using System;
     using System.Collections.Generic;
@@ -18,25 +16,10 @@ namespace QuickType
         public TinderUser Results { get; set; }
     }
 
-    public partial class Badge
-    {
-        [JsonProperty("type")]
-        public string Type { get; set; }
-    }
-
     public partial class City
     {
         [JsonProperty("name")]
         public string Name { get; set; }
-    }
-
-    public partial class Job
-    {
-        [JsonProperty("company")]
-        public City Company { get; set; }
-
-        [JsonProperty("title")]
-        public City Title { get; set; }
     }
 
     public partial class MatchedPreferences
@@ -49,36 +32,6 @@ namespace QuickType
 
         [JsonProperty("has_bio")]
         public bool HasBio { get; set; }
-    }
-
-    public partial class Photo
-    {
-        [JsonProperty("id")]
-        public string Id { get; set; }
-
-        [JsonProperty("crop_info")]
-        public CropInfo CropInfo { get; set; }
-
-        [JsonProperty("url")]
-        public Uri Url { get; set; }
-
-        [JsonProperty("processedFiles")]
-        public ProcessedFile[] ProcessedFiles { get; set; }
-
-        [JsonProperty("processedVideos")]
-        public object[] ProcessedVideos { get; set; }
-
-        [JsonProperty("fileName")]
-        public string FileName { get; set; }
-
-        [JsonProperty("extension")]
-        public string Extension { get; set; }
-
-        [JsonProperty("assets")]
-        public Asset[] Assets { get; set; }
-
-        [JsonProperty("media_type")]
-        public string MediaType { get; set; }
     }
 
     public partial class Asset
@@ -98,35 +51,8 @@ namespace QuickType
 
     public partial class CropInfo
     {
-        [JsonProperty("user")]
-        public User User { get; set; }
-
-        [JsonProperty("algo")]
-        public Algo Algo { get; set; }
-
-        [JsonProperty("processed_by_bullseye")]
-        public bool ProcessedByBullseye { get; set; }
-
-        [JsonProperty("user_customized")]
-        public bool UserCustomized { get; set; }
-
         [JsonProperty("faces")]
         public Face[] Faces { get; set; }
-    }
-
-    public partial class Algo
-    {
-        [JsonProperty("width_pct")]
-        public double WidthPct { get; set; }
-
-        [JsonProperty("x_offset_pct")]
-        public double XOffsetPct { get; set; }
-
-        [JsonProperty("height_pct")]
-        public double HeightPct { get; set; }
-
-        [JsonProperty("y_offset_pct")]
-        public double YOffsetPct { get; set; }
     }
 
     public partial class Face
@@ -151,42 +77,6 @@ namespace QuickType
 
         [JsonProperty("y_offset_pct")]
         public double YOffsetPct { get; set; }
-    }
-
-    public partial class ProcessedFile
-    {
-        [JsonProperty("url")]
-        public Uri Url { get; set; }
-
-        [JsonProperty("height")]
-        public long Height { get; set; }
-
-        [JsonProperty("width")]
-        public long Width { get; set; }
-    }
-
-    public partial class RelationshipIntent
-    {
-        [JsonProperty("descriptor_choice_id")]
-        public string DescriptorChoiceId { get; set; }
-
-        [JsonProperty("image_url")]
-        public Uri ImageUrl { get; set; }
-
-        [JsonProperty("title_text")]
-        public string TitleText { get; set; }
-
-        [JsonProperty("body_text")]
-        public string BodyText { get; set; }
-
-        [JsonProperty("style")]
-        public string Style { get; set; }
-
-        [JsonProperty("hidden_intent")]
-        public HiddenIntent HiddenIntent { get; set; }
-
-        [JsonProperty("tapped_action")]
-        public TappedAction TappedAction { get; set; }
     }
 
     public partial class HiddenIntent
@@ -219,39 +109,6 @@ namespace QuickType
         public string ComponentId { get; set; }
     }
 
-    public partial class SelectedDescriptor
-    {
-        [JsonProperty("id")]
-        public string Id { get; set; }
-
-        [JsonProperty("name", NullValueHandling = NullValueHandling.Ignore)]
-        public string Name { get; set; }
-
-        [JsonProperty("prompt")]
-        public string Prompt { get; set; }
-
-        [JsonProperty("type")]
-        public string Type { get; set; }
-
-        [JsonProperty("icon_url")]
-        public Uri IconUrl { get; set; }
-
-        [JsonProperty("icon_urls")]
-        public IconUrl[] IconUrls { get; set; }
-
-        [JsonProperty("choice_selections", NullValueHandling = NullValueHandling.Ignore)]
-        public Artist[] ChoiceSelections { get; set; }
-
-        [JsonProperty("section_id")]
-        public string SectionId { get; set; }
-
-        [JsonProperty("section_name")]
-        public string SectionName { get; set; }
-
-        [JsonProperty("measurable_selection", NullValueHandling = NullValueHandling.Ignore)]
-        public MeasurableSelection MeasurableSelection { get; set; }
-    }
-
     public partial class Artist
     {
         [JsonProperty("id")]
@@ -278,17 +135,11 @@ namespace QuickType
 
     public partial class MeasurableSelection
     {
-        [JsonProperty("value")]
-        public long Value { get; set; }
-
         [JsonProperty("min")]
         public long Min { get; set; }
 
         [JsonProperty("max")]
         public long Max { get; set; }
-
-        [JsonProperty("unit_of_measure")]
-        public string UnitOfMeasure { get; set; }
     }
 
     public partial class SpotifyThemeTrack
@@ -343,11 +194,5 @@ namespace QuickType
 
         [JsonProperty("string")]
         public string String { get; set; }
-    }
-
-    public partial class UserInterests
-    {
-        [JsonProperty("selected_interests")]
-        public Artist[] SelectedInterests { get; set; }
     }
 }

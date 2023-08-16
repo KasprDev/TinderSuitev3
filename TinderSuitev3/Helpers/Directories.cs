@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace TinderSuitev3.Helpers
 {
+    /// <summary>
+    /// A predefined list of directories the program references from.
+    /// </summary>
     public class Directories
     {
         public static string BaseDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "TinderSuite");

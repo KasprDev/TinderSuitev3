@@ -6,6 +6,11 @@ namespace TinderSuitev3.TinderEngine
 {
     public static class Engine
     {
+        /// <summary>
+        /// Use ML.NET to determine the user's ethnicity.
+        /// </summary>
+        /// <param name="imageBytes"></param>
+        /// <returns></returns>
         public static string ProcessEthnicity(byte[] imageBytes)
         {
             return EthnicityModel.Predict(new EthnicityModel.ModelInput()
@@ -14,6 +19,11 @@ namespace TinderSuitev3.TinderEngine
             }).PredictedLabel;
         }
 
+        /// <summary>
+        /// Process the user's yearly income by scraping the contents of the PayScale website for that profession.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static async Task<string?> GetIncome(TinderUser user)
         {
             try
@@ -26,10 +36,8 @@ namespace TinderSuitev3.TinderEngine
                 var web = new HtmlWeb();
                 var doc = await web.LoadFromWebAsync($"https://www.payscale.com/research/US/Job={job.Title?.Name.Replace(" ", "_")}/Salary");
 
-                string xpath = "//span[contains(@class, 'paycharts__value')]";
-
-                var salaryNode = doc.DocumentNode.SelectSingleNode(xpath);
-                string salary = salaryNode?.InnerText.Trim();
+                var salaryNode = doc.DocumentNode.SelectSingleNode("//span[contains(@class, 'paycharts__value')]");
+                var salary = salaryNode?.InnerText.Trim();
 
                 return salary;
             }
@@ -39,6 +47,12 @@ namespace TinderSuitev3.TinderEngine
             }
         }
 
+        /// <summary>
+        /// Give a weighted store (0 - 100) on whether or not the program believes the user is a bot or not.
+        /// 100 being confident that they are real while lower to 0 meaning they are likely fake.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public static int ScoreUser(TinderUser user)
         {
             user.Bio = user.Bio.ToLower();

@@ -2,7 +2,7 @@
 
 namespace TinderSuitev3.Objects
 {
-    public class User
+    public partial class User
     {
         [JsonProperty("connection_count")] public int ConnectionCount { get; set; }
 
