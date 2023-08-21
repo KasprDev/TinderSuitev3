@@ -42,20 +42,20 @@ namespace TinderSuitev3.Windows
             Title = $"Chat with {Match.Person.Name}";
         }
 
-        public async Task<string?> GenerateAiReply(Message[] messages)
+        public async Task<string?> GenerateAiReply()
         {
             //The information to send to the AI to process a reply.
-            var aiContextMessages = new List<ChatMessage>();
+            var aiContextMessages = new List<ChatMessage>() {};
 
             // No messages have been exchanged yet, come up with a pickup line instead.
-            if (messages.Length == 0)
+            if (Messages?.Length == 0)
             {
                 aiContextMessages.Add(ChatMessage.FromUser(AIAssistant.PickupLineContext));
             }
             else
             {
                 // Feed the AI a list of received messages for context.
-                var m = messages.Where(x => x.From != UserId).ToList();
+                var m = Messages.Where(x => x.From != UserId).ToList();
                 var msg = m.Aggregate("", (current, message) => current + $"{(message.From == UserId ? "I said" : "They said")} \"{message.Text}\". Then, ");
 
                 // Remove the trailing "Then,"
@@ -65,7 +65,9 @@ namespace TinderSuitev3.Windows
                 aiContextMessages.Add(ChatMessage.FromUser(msg));
             }
 
-            return await new AIAssistant().GetResponse(aiContextMessages);
+            var resp = await AIAssistant.GetResponse(aiContextMessages);
+
+            return resp;
         }
 
         private async Task SendMessage()
@@ -84,7 +86,7 @@ namespace TinderSuitev3.Windows
             await Tinder.Instances.First().SendMessage(Match.MatchId, NewMessage.Text);
 
             NewMessage.Text = "";
-            Messages = messages.ToArray();
+            Messages = messages?.ToArray();
             OnPropertyChanged("Messages");
         }
 
@@ -101,7 +103,7 @@ namespace TinderSuitev3.Windows
 
         private async void AIGenButton_OnClick(object sender, RoutedEventArgs e)
         {
-            NewMessage.Text = await GenerateAiReply(Messages);
+            NewMessage.Text = await GenerateAiReply();
         }
 
         private void ViewProfile_OnClick(object sender, RoutedEventArgs e)

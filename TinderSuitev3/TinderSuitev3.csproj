@@ -24,6 +24,7 @@
     <PackageReference Include="SciSharp.TensorFlow.Redist" Version="2.3.1" />
     <PackageReference Include="Serilog" Version="3.0.1" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="System.Management" Version="7.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Fonts\fa-solid-900.ttf" />

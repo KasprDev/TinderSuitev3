@@ -30,6 +30,17 @@ namespace TinderSuitev3
                 Directory.CreateDirectory(Directories.BaseDir);
                 Directory.CreateDirectory(Directories.AccountsDir);
             }
+
+            if (File.Exists(Path.Combine(Directories.BaseDir, "license.lic")))
+            {
+                var l = new Licensing.Licensing();
+                l.ValidateLicense(File.ReadAllText(Path.Combine(Directories.BaseDir, "license.lic")));
+
+                new MainWindow().Show();
+                return;
+            }
+
+            new RegisterLicense().Show();
         }
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {

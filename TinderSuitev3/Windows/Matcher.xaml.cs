@@ -97,8 +97,7 @@ namespace TinderSuitev3.Windows
                     LocationLon.Text = profile?.Data.User.Pos.Lon.ToString(CultureInfo.InvariantCulture);
                     LocationLat.Text = profile?.Data.User.Pos.Lat.ToString(CultureInfo.InvariantCulture);
 
-                    //LikesYou.Text = data.Data.Count.ToString();
-                    LikesYou.Text = "57";
+                    LikesYou.Text = data.Data.Count.ToString();
                     await Task.Delay(TimeSpan.FromMinutes(2));
                 }
                 else
@@ -346,6 +345,14 @@ namespace TinderSuitev3.Windows
         {
             Regex regex = new Regex("[^0-9.]+");
             e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private async void InvisibilityMode_OnClick(object sender, RoutedEventArgs e)
+        {
+            await Tinder.Instances.First().EnableInvisibilityMode(true);
+            new DarkMessageBox(
+                    "Invisibility mode has been enabled. You will not show up to other users unless you have liked them. To disable this, turn ON Discovery mode from your Tinder settings from the official app.")
+                .ShowDialog();
         }
     }
 }

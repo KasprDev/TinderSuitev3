@@ -1,5 +1,7 @@
 ﻿using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Input;
 using Newtonsoft.Json;
 using TinderSuitev3.Helpers;
 using TinderSuitev3.Objects;
@@ -13,6 +15,15 @@ namespace TinderSuitev3.Windows
         public ProgramSettings()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// Text box that only allows number inputs.
+        /// </summary>
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9.]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -30,15 +41,20 @@ namespace TinderSuitev3.Windows
         {
             var settings = Path.Combine(Directories.BaseDir, "Settings.json");
 
+            if (AiContextText.Text.Length == 0)
+                AiContextText.Text = null;
+
             var s = new ProgramSettingsDto()
             {
                 OpenAiKey = OpenAiKey.Text,
-                WeightThreshold = Convert.ToInt32(WeightThreshold.Value)
+                WeightThreshold = Convert.ToInt32(WeightThreshold.Value),
+                MaxTokens = Convert.ToInt32(OpenAiMaxTokens.Text),
+                AiMessageContext = AiContextText.Text
             };
 
             await File.WriteAllTextAsync(settings, JsonConvert.SerializeObject(s));
-
             await Helpers.Settings.Refresh();
+
             Close();
         }
 

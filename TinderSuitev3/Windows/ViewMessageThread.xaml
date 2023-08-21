@@ -102,7 +102,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <Button Background="#01000000" Name="AIGenButton" Click="AIGenButton_OnClick">
+            <Button Background="#01000000" Name="AiGenButton" Click="AIGenButton_OnClick">
                 <TextBlock Text="&#xf544;" FontSize="22" Foreground="CadetBlue" HorizontalAlignment="Center" Style="{DynamicResource FontAwesome}" />
                 <Button.Style>
                     <Style TargetType="Button">

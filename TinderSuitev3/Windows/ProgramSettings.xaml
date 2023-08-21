@@ -10,7 +10,17 @@
     <Grid>
         <StackPanel Margin="10" Name="SettingsPanel">
             <TextBlock Text="OpenAI Api Key" Padding="0, 0, 0, 5" FontWeight="Bold"></TextBlock>
-            <TextBox Name="OpenAiKey" Padding="4" />
+            <TextBox Name="OpenAiKey" Padding="4" Margin="0, 0, 0, 5"/>
+            <TextBlock Text="Max Tokens Per Request" Padding="0, 0, 0, 5" FontWeight="Bold"></TextBlock>
+            <TextBox Name="OpenAiMaxTokens" Padding="4" PreviewTextInput="NumberValidationTextBox" Margin="0, 0, 0, 5"/>
+            <TextBlock Text="AI Message Context" Padding="0, 0, 0, 5" FontWeight="Bold"></TextBlock>
+            <TextBox
+                Name="AiContextText"
+                Height="60"
+                TextWrapping="Wrap"
+                AcceptsReturn="True"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Auto"/>
             <StackPanel Orientation="Horizontal" Margin="0, 6, 0, 0">
                 <TextBlock Text="Fake Account Weight Score" FontWeight="Bold"></TextBlock>
                 <Button Background="#01000000" BorderBrush="#01000000" Click="ButtonBase_OnClick">

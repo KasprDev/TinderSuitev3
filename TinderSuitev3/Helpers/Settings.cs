@@ -14,6 +14,9 @@ namespace TinderSuitev3.Helpers
             if (_settings == null && File.Exists(settings))
                 _settings = JsonConvert.DeserializeObject<ProgramSettingsDto>(await File.ReadAllTextAsync(settings));
 
+            if (_settings?.AiMessageContext != null)
+                AIAssistant.MessageContext = _settings.AiMessageContext;
+
             return _settings;
         }
 

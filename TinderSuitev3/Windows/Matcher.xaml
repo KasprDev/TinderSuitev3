@@ -73,7 +73,11 @@
                             <TextBox Grid.Column="2" Padding="5" Name="LocationLon" PreviewTextInput="NumberValidationTextBox"></TextBox>
                         </Grid>
 
-                        <Button Margin="10, 0, 10, 0" Content="Update Location" Padding="6" Name="UpdateLocation" Click="UpdateLocation_OnClick"></Button>
+                        <Button Margin="10, 0, 10, 8" Content="Update Location" Padding="6" Name="UpdateLocation" Click="UpdateLocation_OnClick"></Button>
+
+                        <Separator></Separator>
+
+                        <Button Margin="10, 8, 10, 8" Content="Invisibility Mode" Padding="6" Name="InvisibilityMode" Click="InvisibilityMode_OnClick"></Button>
                     </StackPanel>
                 </GroupBox>
             </Grid>
@@ -291,7 +295,6 @@
                     </Grid.ColumnDefinitions>
 
                     <CheckBox Name="ReportBots"  Grid.Column="0" Content="Report Bots" Margin="0 2 0 2"/>
-                    <CheckBox Grid.Column="1" Content="Report Bots" Margin="0 2 0 2"/>
                 </Grid>
             </GroupBox>
 

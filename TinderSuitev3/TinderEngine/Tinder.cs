@@ -52,6 +52,17 @@ namespace TinderSuitev3.TinderEngine
             Client = new HttpClient(handler: httpClientHandler, disposeHandler: true);
         }
 
+        public async Task EnableInvisibilityMode(bool value)
+        {
+            await SendPost($"v2/profile?locale=en", new
+            {
+                user = new
+                {
+                    discoverable = !value
+                }
+            });
+        }
+
         public async Task UpdateBio(string bio)
         {
             await SendPost($"v2/profile?locale=en", new

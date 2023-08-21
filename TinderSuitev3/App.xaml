@@ -2,8 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:DotNetServerManager"
-             xmlns:serilog="clr-namespace:Serilog;assembly=Serilog"
-             StartupUri="/Windows/MainWindow.xaml">
+             xmlns:serilog="clr-namespace:Serilog;assembly=Serilog">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

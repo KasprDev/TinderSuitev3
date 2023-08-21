@@ -17,8 +17,8 @@
         "Version": 1,
         "Type": "Trial",
         "TrainerName": "ImageClassificationMulti",
-        "Score": 0.5714285714285714,
-        "RuntimeInSeconds": 46.184,
+        "Score": 0.65789473684210531,
+        "RuntimeInSeconds": 52.902,
         "Parameter": {
           "_SCHEMA_": "e0 * e1 * e2",
           "e0": {
