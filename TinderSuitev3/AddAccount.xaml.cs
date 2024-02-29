@@ -44,6 +44,9 @@ namespace TinderSuitev3
                 XAuthToken = XAuthTokenTxt.Text
             };
 
+            if (!Directory.Exists(Directories.AccountsDir))
+                Directory.CreateDirectory(Directories.AccountsDir);
+
             await File.WriteAllTextAsync(Path.Combine(Directories.AccountsDir, $"{XAuthTokenTxt.Text}.json"), JsonConvert.SerializeObject(u));
             Tinder.Instances.Add(t);
             Instances.MainWindow?.LoggedIn();

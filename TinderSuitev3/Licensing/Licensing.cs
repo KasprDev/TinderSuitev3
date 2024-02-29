@@ -13,7 +13,7 @@ namespace TinderSuitev3.Licensing
     {
         private static readonly HttpClient client = new HttpClient();
         public string Url { get; set; } = "https://licensing.deviar.net";
-        public int SoftwareId { get; set; } = 9;
+        public int SoftwareId { get; set; } = 1;
 
         public void SecurityCheck()
         {

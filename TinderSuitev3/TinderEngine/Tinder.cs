@@ -14,8 +14,8 @@ namespace TinderSuitev3.TinderEngine
     {
         public static List<Tinder> Instances = new();
 
-        private const string AppVersion = "1043001";
-        private const string TinderVersion = "4.30.1";
+        private const string AppVersion = "1044400";
+        private const string TinderVersion = "4.44.0";
 
         private const string UserAgent =
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 Edg/115.0.1901.203";
